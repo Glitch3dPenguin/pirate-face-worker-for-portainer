@@ -7,12 +7,17 @@ name: pf-work
 # Image: :latest = the current PyPI build (this repo's workflow pushes it on
 # push, on a daily schedule, and on demand); pin :<version> (e.g. :0.2.24) to
 # hold a fleet on a known-good release.
+#
+# Key: supply PIRATEFACE_KEY (from https://pirateface.co/settings) as a
+# Portainer stack environment variable — or the host environment for bare
+# docker compose. The guard below refuses to start without it.
+# This repo is public: never commit a real key into this file.
 services:
   worker-1:
     image: ghcr.io/glitch3dpenguin/pirate-face-worker-for-portainer:latest
     restart: unless-stopped
-    env_file: .env
     environment:
+      PIRATEFACE_KEY: "${PIRATEFACE_KEY:?set PIRATEFACE_KEY (from https://pirateface.co/settings) as a stack environment variable}"
       LANE_NAME: KLD-MACHINE1-01
       MAX_SIZE: "5120"
       # MAX_RATE: "25"   # decimal MB/s per lane (0.2.24+); unset = unlimited
@@ -22,30 +27,33 @@ services:
   worker-2:
     image: ghcr.io/glitch3dpenguin/pirate-face-worker-for-portainer:latest
     restart: unless-stopped
-    env_file: .env
     environment:
+      PIRATEFACE_KEY: "${PIRATEFACE_KEY:?set PIRATEFACE_KEY (from https://pirateface.co/settings) as a stack environment variable}"
       LANE_NAME: KLD-MACHINE1-02
       MAX_SIZE: "1024"
+      # MAX_RATE: "25"   # decimal MB/s per lane (0.2.24+); unset = unlimited
     volumes:
       - worker-2-state:/root/.config/pirateface
 
   worker-3:
     image: ghcr.io/glitch3dpenguin/pirate-face-worker-for-portainer:latest
     restart: unless-stopped
-    env_file: .env
     environment:
+      PIRATEFACE_KEY: "${PIRATEFACE_KEY:?set PIRATEFACE_KEY (from https://pirateface.co/settings) as a stack environment variable}"
       LANE_NAME: KLD-MACHINE1-03
       MAX_SIZE: "500"
+      # MAX_RATE: "25"   # decimal MB/s per lane (0.2.24+); unset = unlimited
     volumes:
       - worker-3-state:/root/.config/pirateface
 
   worker-4:
     image: ghcr.io/glitch3dpenguin/pirate-face-worker-for-portainer:latest
     restart: unless-stopped
-    env_file: .env
     environment:
+      PIRATEFACE_KEY: "${PIRATEFACE_KEY:?set PIRATEFACE_KEY (from https://pirateface.co/settings) as a stack environment variable}"
       LANE_NAME: KLD-MACHINE1-04
       MAX_SIZE: "500"
+      # MAX_RATE: "25"   # decimal MB/s per lane (0.2.24+); unset = unlimited
     volumes:
       - worker-4-state:/root/.config/pirateface
 

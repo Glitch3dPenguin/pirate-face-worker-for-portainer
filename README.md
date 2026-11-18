@@ -14,8 +14,11 @@ volume.
    anonymously. Private = add one registry credential in Portainer instead.
 3. Set the per-machine `LANE_NAME`s in `docker-compose.yml` (the image
    reference is already set for this repo).
-4. Portainer → Stacks → New stack → the repo URL → put the real key in `.env`
-   (or override `PIRATEFACE_KEY` as a stack environment variable) → Deploy.
+4. Portainer → Stacks → New stack → the repo URL → add the real key as a
+   **stack environment variable** named `PIRATEFACE_KEY` (one field in the
+   stack UI, from https://pirateface.co/settings) → Deploy. The compose file
+   refuses to start without it. Bare `docker compose` on a host: export the
+   same variable first. The repo is public — the key never goes in the file.
 5. Logs: the stack's Logs view (each worker prints its lane start line, then
    the pf output).
 
