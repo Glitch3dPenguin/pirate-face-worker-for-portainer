@@ -1,0 +1,56 @@
+name: pf-work
+# One service per worker lane. Each lane takes ONE queued job at a time (the
+# CLI's design); add/remove worker-N services to scale the machine.
+# Every worker needs its OWN LANE_NAME (per-lane lease checkpoint + rescue-board
+# label) and its OWN state volume (container recreation keeps the checkpoint).
+#
+# Image: :latest = the current PyPI build (this repo's workflow pushes it on
+# push, on a daily schedule, and on demand); pin :<version> (e.g. :0.2.24) to
+# hold a fleet on a known-good release.
+services:
+  worker-1:
+    image: ghcr.io/glitch3dpenguin/pirate-face-worker-for-portainer:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      LANE_NAME: KLD-MACHINE1-01
+      MAX_SIZE: "5120"
+      # MAX_RATE: "25"   # decimal MB/s per lane (0.2.24+); unset = unlimited
+    volumes:
+      - worker-1-state:/root/.config/pirateface
+
+  worker-2:
+    image: ghcr.io/glitch3dpenguin/pirate-face-worker-for-portainer:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      LANE_NAME: KLD-MACHINE1-02
+      MAX_SIZE: "1024"
+    volumes:
+      - worker-2-state:/root/.config/pirateface
+
+  worker-3:
+    image: ghcr.io/glitch3dpenguin/pirate-face-worker-for-portainer:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      LANE_NAME: KLD-MACHINE1-03
+      MAX_SIZE: "500"
+    volumes:
+      - worker-3-state:/root/.config/pirateface
+
+  worker-4:
+    image: ghcr.io/glitch3dpenguin/pirate-face-worker-for-portainer:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      LANE_NAME: KLD-MACHINE1-04
+      MAX_SIZE: "500"
+    volumes:
+      - worker-4-state:/root/.config/pirateface
+
+volumes:
+  worker-1-state:
+  worker-2-state:
+  worker-3-state:
+  worker-4-state:
